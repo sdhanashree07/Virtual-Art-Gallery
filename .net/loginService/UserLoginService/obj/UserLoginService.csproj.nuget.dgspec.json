@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\cdac\\Project\\.net\\loginService\\UserLoginService\\UserLoginService.csproj": {}
+    "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\UserLoginService.csproj": {}
   },
   "projects": {
-    "D:\\cdac\\Project\\.net\\loginService\\UserLoginService\\UserLoginService.csproj": {
+    "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\UserLoginService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\cdac\\Project\\.net\\loginService\\UserLoginService\\UserLoginService.csproj",
+        "projectUniqueName": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\UserLoginService.csproj",
         "projectName": "UserLoginService",
-        "projectPath": "D:\\cdac\\Project\\.net\\loginService\\UserLoginService\\UserLoginService.csproj",
+        "projectPath": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\UserLoginService.csproj",
         "packagesPath": "C:\\Users\\the\\.nuget\\packages\\",
-        "outputPath": "D:\\cdac\\Project\\.net\\loginService\\UserLoginService\\obj\\",
+        "outputPath": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
