@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `virtual_art_gallery` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `virtual_art_gallery`;
--- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: virtual_art_gallery
 -- ------------------------------------------------------
@@ -66,6 +66,7 @@ CREATE TABLE `art_category` (
 
 LOCK TABLES `art_category` WRITE;
 /*!40000 ALTER TABLE `art_category` DISABLE KEYS */;
+INSERT INTO `art_category` VALUES (1,'Painting','there are 7 types of Painting'),(2,'Sculpture','there are 4 type of the sculpture'),(3,'Digital Photography','there are 3 types added by us you can choose other option which is not from the above 3'),(4,'Sketching','there are 4 type of sketching');
 /*!40000 ALTER TABLE `art_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,6 +146,7 @@ CREATE TABLE `artist` (
 
 LOCK TABLES `artist` WRITE;
 /*!40000 ALTER TABLE `artist` DISABLE KEYS */;
+INSERT INTO `artist` VALUES (7,'hello');
 /*!40000 ALTER TABLE `artist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -428,7 +430,7 @@ CREATE TABLE `users` (
   KEY `role_id_fk_idx` (`role_id`),
   CONSTRAINT `area_id_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`),
   CONSTRAINT `role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -437,6 +439,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (7,'Artist','Role','artist@gmail.com','2233',NULL,1,'artist','$2a$11$VSVys1jhcsWvTvHwTI4T4.HoooBwzbRI8GJQbsugIGxuWsx2z8GLS',0,2,'hjgh'),(8,'Buyer','Role','buyer@gmail.com','2233',NULL,2,'buyer','$2a$11$ztzXySYYi4v.57/NidyAmOAiYOXV7wz3qmhzLEQAatEmEocgO8hDG',0,3,'hjgh'),(9,'Admin','Role','admin@gmail.com','2233',NULL,2,'admin','$2a$11$ReWm5gTk1dFQKNTKjjnenuBECpEIhqmGsMkIo.5USEhUs4CxvUjna',0,1,'hjgh');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -449,4 +452,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-05  9:01:08
+-- Dump completed on 2024-08-05 15:56:23
