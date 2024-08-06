@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\loginService",
+    "\\loginService\\UserLoginService",
+    "\\loginService\\UserLoginService\\bin",
+    "\\loginService\\UserLoginService\\Controllers",
+    "\\loginService\\UserLoginService\\Models"
+  ],
+  "PreviewInSolutionExplorer": false
+}
