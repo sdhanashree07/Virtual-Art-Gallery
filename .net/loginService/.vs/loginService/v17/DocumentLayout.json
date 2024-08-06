@@ -7,10 +7,6 @@
       "RelativeMoniker": "D:0:0:{B898A768-3906-4747-A943-475DF0DDAE9C}|UserLoginService\\UserLoginService.csproj|solutionrelative:userloginservice\\controllers\\usermanagementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B898A768-3906-4747-A943-475DF0DDAE9C}|UserLoginService\\UserLoginService.csproj|d:\\cdac\\virtual art gallary\\virtual-art-gallery(dhanashree)\\.net\\loginservice\\userloginservice\\models\\dummyartist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B898A768-3906-4747-A943-475DF0DDAE9C}|UserLoginService\\UserLoginService.csproj|solutionrelative:userloginservice\\models\\dummyartist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B898A768-3906-4747-A943-475DF0DDAE9C}|UserLoginService\\UserLoginService.csproj|d:\\cdac\\virtual art gallary\\virtual-art-gallery(dhanashree)\\.net\\loginservice\\userloginservice\\models\\virtual_art_gallerycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B898A768-3906-4747-A943-475DF0DDAE9C}|UserLoginService\\UserLoginService.csproj|solutionrelative:userloginservice\\models\\virtual_art_gallerycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -30,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,7 +34,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\Program.cs",
               "RelativeDocumentMoniker": "UserLoginService\\Program.cs",
@@ -50,19 +46,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DummyArtist.cs",
-              "DocumentMoniker": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\Models\\DummyArtist.cs",
-              "RelativeDocumentMoniker": "UserLoginService\\Models\\DummyArtist.cs",
-              "ToolTip": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\Models\\DummyArtist.cs",
-              "RelativeToolTip": "UserLoginService\\Models\\DummyArtist.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAzAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T16:09:22.986Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\Models\\User.cs",
               "RelativeDocumentMoniker": "UserLoginService\\Models\\User.cs",
@@ -74,7 +58,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "virtual_art_galleryContext.cs",
               "DocumentMoniker": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\Models\\virtual_art_galleryContext.cs",
               "RelativeDocumentMoniker": "UserLoginService\\Models\\virtual_art_galleryContext.cs",
@@ -92,7 +76,7 @@
               "RelativeDocumentMoniker": "UserLoginService\\Controllers\\UserManagementController.cs",
               "ToolTip": "D:\\cdac\\virtual Art Gallary\\Virtual-Art-Gallery(Dhanashree)\\.net\\loginService\\UserLoginService\\Controllers\\UserManagementController.cs",
               "RelativeToolTip": "UserLoginService\\Controllers\\UserManagementController.cs",
-              "ViewState": "AQIAAEEAAAAAAAAAAAAuwGAAAAAAAAAA",
+              "ViewState": "AQIAAEwAAAAAAAAAAAAAAGIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-02T14:58:09.062Z",
               "EditorCaption": ""

@@ -95,8 +95,11 @@ namespace UserLoginService.Controllers
 
                     }
 
+
+
                 }
-                    return logdb;              
+
+                return null;
             }
 
         }
