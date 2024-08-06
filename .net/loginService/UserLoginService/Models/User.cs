@@ -14,7 +14,7 @@ namespace UserLoginService.Models
         public int AreaId { get; set; }
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public sbyte Status { get; set; }
+        public sbyte? Status { get; set; }
         public int RoleId { get; set; }
         public string? Address { get; set; } = null!;
 
