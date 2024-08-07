@@ -3,8 +3,9 @@
     "",
     "\\loginService",
     "\\loginService\\UserLoginService",
-    "\\loginService\\UserLoginService\\Controllers"
+    "\\loginService\\UserLoginService\\Controllers",
+    "\\loginService\\UserLoginService\\Models"
   ],
-  "SelectedNode": "\\loginService\\UserLoginService\\Controllers\\UserManagementController.cs",
+  "SelectedNode": "\\loginService\\UserLoginService\\Models\\Role.cs",
   "PreviewInSolutionExplorer": false
 }

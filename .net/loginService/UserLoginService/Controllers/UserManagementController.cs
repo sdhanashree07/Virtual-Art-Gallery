@@ -33,7 +33,7 @@ namespace UserLoginService.Controllers
         }
 
         [HttpPost]
-        public User SaveUser(User user)
+        public User SaveArtist(User user)
         {
             using (var db = new virtual_art_galleryContext())
             {
@@ -46,13 +46,16 @@ namespace UserLoginService.Controllers
                 {
                     user.Artist.Id = user.Id;
                     // user.Artist.IdNavigation = user;
+
                     db.Artists.Add(user.Artist);
+                    
                 }
                 db.SaveChanges();
             }
             return user;
 
         }
+
 
         [HttpPost]
         public User Savebuyer(User user)
@@ -71,7 +74,7 @@ namespace UserLoginService.Controllers
 
 
         [HttpPost]
-        public User VerifyLogin(User user)
+        public User VerifyLogin(DummyUser user)
         {
             User? logdb;
             using (var db = new virtual_art_galleryContext())
@@ -92,8 +95,11 @@ namespace UserLoginService.Controllers
 
                     }
 
+
+
                 }
-                return logdb;
+
+                return null;
             }
 
         }
