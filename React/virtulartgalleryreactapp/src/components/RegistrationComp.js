@@ -307,9 +307,9 @@ export default function RegistrationComp() {
                 required
               >
                 <option value="">Select Role</option>
-                <option value="1">Admin</option>
+                
                 <option value="2">Artist</option>
-                <option value="3">Buyer</option>
+                
               </select>
               {user.roleError && <div className="invalid-feedback">{user.roleError}</div>}
             </div>

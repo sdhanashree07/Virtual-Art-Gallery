@@ -16,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import LogoutComp from './components/LogoutComp';
+import RegistrationBuyerComp from './components/RegistrationBuyer';
 
 function App() {
  const mystate = useSelector((state) => state.logged);
@@ -33,9 +34,13 @@ function App() {
                 <FaSignInAlt className="me-1" />
                 Login
               </Link>
-              <Link to="/register" className="btn btn-primary">
+              <Link to="/register_artist" className="btn btn-primary">
                 <FaUserPlus className="me-1" />
-                Register
+                Register Artist
+              </Link>
+              <Link to="/register_buyer" className="btn btn-primary">
+                <FaUserPlus className="me-1" />
+                Register Buyer
               </Link>
             </div>
           </div>
@@ -45,7 +50,8 @@ function App() {
 
         <Routes> {/* Use Routes instead of Switch */}
           <Route path="/" element={<HomePage />} /> {/* Updated Route syntax */}
-          <Route path="/register" element={<RegistrationComp/>} /> {/* Updated Route syntax */}
+          <Route path="/register_artist" element={<RegistrationComp/>} />
+          <Route path="/register_buyer" element={<RegistrationBuyerComp/>} /> {/* Updated Route syntax */}
           <Route path="/login" element={  <LoginComp/>}/> 
           <Route path ="/admin_home" element={<AdminPage/>}/>
           <Route path ="/artist_home" element={<ArtistPage/>}/>
