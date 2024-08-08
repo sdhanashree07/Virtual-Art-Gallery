@@ -146,7 +146,7 @@ CREATE TABLE `artist` (
 
 LOCK TABLES `artist` WRITE;
 /*!40000 ALTER TABLE `artist` DISABLE KEYS */;
-INSERT INTO `artist` VALUES (7,'hello');
+INSERT INTO `artist` VALUES (7,'hello'),(10,'hello'),(11,'xxxxxxxxxxxxxx'),(12,'yyyyyyyyyyyyyyyy'),(13,'ooooooooooooooooo'),(16,'rrrrrrrrrrrrrrrrrrrrrrr');
 /*!40000 ALTER TABLE `artist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,12 +166,12 @@ CREATE TABLE `artwork` (
   `dimension` varchar(100) NOT NULL,
   `weight` decimal(5,3) NOT NULL,
   `sub_cat_id` int NOT NULL,
-  `artist_id` int NOT NULL,
+  `u_id` int NOT NULL,
   PRIMARY KEY (`art_id`),
-  KEY `artist_id_fk_idx` (`artist_id`),
+  KEY `artist_id_fk_idx` (`u_id`),
   KEY `sub_cat_id_fk_idx` (`sub_cat_id`),
-  CONSTRAINT `artist_id_fk` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`),
-  CONSTRAINT `sub_cat_id_fk` FOREIGN KEY (`sub_cat_id`) REFERENCES `art_sub_category` (`sc_id`)
+  CONSTRAINT `sub_cat_id_fk` FOREIGN KEY (`sub_cat_id`) REFERENCES `art_sub_category` (`sc_id`),
+  CONSTRAINT `u_id_fk` FOREIGN KEY (`u_id`) REFERENCES `artist` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -430,7 +430,7 @@ CREATE TABLE `users` (
   KEY `role_id_fk_idx` (`role_id`),
   CONSTRAINT `area_id_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`),
   CONSTRAINT `role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -439,7 +439,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (7,'Artist','Role','artist@gmail.com','2233',NULL,1,'artist','$2a$11$VSVys1jhcsWvTvHwTI4T4.HoooBwzbRI8GJQbsugIGxuWsx2z8GLS',0,2,'hjgh'),(8,'Buyer','Role','buyer@gmail.com','2233',NULL,2,'buyer','$2a$11$ztzXySYYi4v.57/NidyAmOAiYOXV7wz3qmhzLEQAatEmEocgO8hDG',0,3,'hjgh'),(9,'Admin','Role','admin@gmail.com','2233',NULL,2,'admin','$2a$11$ReWm5gTk1dFQKNTKjjnenuBECpEIhqmGsMkIo.5USEhUs4CxvUjna',0,1,'hjgh');
+INSERT INTO `users` VALUES (7,'Artist','Role','artist@gmail.com','2233',NULL,1,'artist','$2a$11$VSVys1jhcsWvTvHwTI4T4.HoooBwzbRI8GJQbsugIGxuWsx2z8GLS',0,2,'hjgh'),(8,'Buyer','Role','buyer@gmail.com','2233',NULL,2,'buyer','$2a$11$ztzXySYYi4v.57/NidyAmOAiYOXV7wz3qmhzLEQAatEmEocgO8hDG',0,3,'hjgh'),(9,'Admin','Role','admin@gmail.com','2233',NULL,2,'admin','$2a$11$ReWm5gTk1dFQKNTKjjnenuBECpEIhqmGsMkIo.5USEhUs4CxvUjna',0,1,'hjgh'),(10,'Dhanashree','Sonawane','dhanshree@123','9373315055',NULL,1,'dhanu','$2a$11$VkBCsdt86J6cZCNsTnTBOugxAUCZq1xRrhW7GpAA4W.E4hyG.9uz.',0,2,'fdmgj'),(11,'Bakul','Joshi','bakul@gmail.com','888888888',NULL,1,'bakul.joshi','$2a$11$ywWp7BEYe8IdiVwcfxooZejIpGpDmbjvCJxsMXRUbGm93BHH6o/w2',1,2,'xxxxxxxxxx'),(12,'Prasad','Deshmukh','prasad@gmail.com','9999999999',NULL,1,'prasad.d','$2a$11$deD9vfnb7i6apWREyeTz9OE1bnAOTe6uahpNicWoBOh.OaGRStIw6',0,2,'xxxxxxxxxxxxxxxxx'),(13,'Prasad1','Deshmukh1','prasad@gmail.com1','9999999999',NULL,1,'prasad.d1','$2a$11$cOO2ZQ4ctMajpdhGJ.kJbeAqjkIx5YpQgMEB/x0O1ntVsLQBBf/N.',0,2,'uuuuuuuuuuuuuu'),(14,'mansi','patil','manasi@gmail.com','1234567891',NULL,1,'mansi','$2a$11$Eqa8bHVd/JihUwvaQGVvn.kFFZeGWdPcydjKFs91UJfwqEb00yTya',0,2,'aaaaaaaaaaaaaaaaaa'),(15,'mansi1','patil1','manasi@gmail.com','1234567891',NULL,1,'mansia','$2a$11$i.2cxcD6sQxssD6tU18j0.1SxJnLAILvkwkqGicY5oB6j3rToPCOu',0,3,'aaaaaaaaaaaaaaaaaa'),(16,'moin','rogatiya','moin@gmail.com','4323125456',NULL,1,'moin','$2a$11$eI0uXxaWDzmVZanxnl8FOuNVCvsP610OXbo/vIYP/oWujrZzgO1Ki',0,2,'mmmmmmmmmmmmmmmmm');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -452,4 +452,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-05 15:56:23
+-- Dump completed on 2024-08-08 12:03:18

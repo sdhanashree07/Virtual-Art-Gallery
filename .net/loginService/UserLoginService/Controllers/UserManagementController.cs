@@ -79,6 +79,7 @@ namespace UserLoginService.Controllers
             User? logdb;
             using (var db = new virtual_art_galleryContext())
             {
+
                 logdb = db.Users.Where(u => u.Username == user.Username).FirstOrDefault();
                 if (logdb != null)
                 {

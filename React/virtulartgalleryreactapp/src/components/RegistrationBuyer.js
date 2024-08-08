@@ -1,6 +1,7 @@
 import React, { useState, useReducer } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaCogs } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
 
 // Initial state for the form
 const initialState = {
@@ -78,6 +79,8 @@ export default function RegistrationBuyerComp() {
   const [user, dispatch] = useReducer(reducer, initialState);
   const [msg, setmsg] = useState("");
 
+  const navigate =useNavigate();
+
   // Function to validate the form
   const validateForm = () => {
     const errors = {
@@ -125,7 +128,7 @@ export default function RegistrationBuyerComp() {
 
       fetch("https://localhost:44375/api/UserManagement/Savebuyer", sendData)
         .then(resp => resp.json())
-        .then(obj => setmsg("Registration successful!"))
+        .then(obj => setmsg(navigate("/login")))
         .catch(error => setmsg(error.message));
     }
   };
