@@ -7,20 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import com.example.demo.entities.ProductCategory;
-import com.example.demo.services.ProductCategoryService;
+import com.example.demo.entities.User;
+import com.example.demo.services.UserService;
 
 @RestController
-@RequestMapping("/products")
-public class ProductCategoryController {
-
-	@Autowired
-	ProductCategoryService pcservice;
+@RequestMapping("/user")
+public class UserController {
 	
-	@GetMapping("/allproductcategory")
-	public List<ProductCategory> getAllPCategory(){
-		
-		return pcservice.getPCategory();
-		}
+	@Autowired
+	UserService uService;
+	
+	@GetMapping("/getusers")
+	public List<User> getAllUsers(){
+		return uService.getAllUsers();
+	}
 }
