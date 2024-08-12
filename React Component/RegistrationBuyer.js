@@ -14,7 +14,6 @@ const initialState = {
   Password: "",
   roleId: "",
   address: "",
-  description: "",
   fnameError: "",
   lnameError: "",
   emailidError: "",
@@ -25,7 +24,7 @@ const initialState = {
   pwdError: "",
   roleError: "",
   addressError: "",
-  descriptionError: ""
+ 
 };
 
 // Reducer function to handle state updates
@@ -75,7 +74,7 @@ const validateRole = (role) => {
 };
 
 // Main registration component
-export default function RegistrationComp() {
+export default function RegistrationBuyerComp() {
   const [user, dispatch] = useReducer(reducer, initialState);
   const [msg, setmsg] = useState("");
 
@@ -92,7 +91,7 @@ export default function RegistrationComp() {
       pwdError: user.Password ? validatePassword(user.Password) : "Password is required.",
       roleError: validateRole(user.roleId),
       addressError: user.address ? "" : "Address is required.",
-      descriptionError: user.description ? "" : "Description is required."
+     
     };
 
     Object.keys(errors).forEach(key => {
@@ -120,15 +119,11 @@ export default function RegistrationComp() {
           password: user.Password,
           roleId: user.roleId,
           address: user.address,
-          artist: {
-               
-              about: user.description
-    
-          }
+         
         })
       };
 
-      fetch("https://localhost:44375/api/UserManagement/Saveartist", sendData)
+      fetch("https://localhost:44375/api/UserManagement/Savebuyer", sendData)
         .then(resp => resp.json())
         .then(obj => setmsg("Registration successful!"))
         .catch(error => setmsg(error.message));
@@ -308,8 +303,7 @@ export default function RegistrationComp() {
               >
                 <option value="">Select Role</option>
                 
-                <option value="2">Artist</option>
-                
+                <option value="3">Buyer</option>
               </select>
               {user.roleError && <div className="invalid-feedback">{user.roleError}</div>}
             </div>
@@ -331,21 +325,6 @@ export default function RegistrationComp() {
             </div>
           </div>
 
-          {/* Description */}
-          <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
-            <div className="input-group">
-              <textarea
-                className={`form-control ${user.descriptionError ? "is-invalid" : ""}`}
-                name="description"
-                value={user.description}
-                onChange={(e) => dispatch({ type: 'update', fld: 'description', val: e.target.value })}
-                placeholder="Enter a brief description"
-                rows="3"
-              />
-              {user.descriptionError && <div className="invalid-feedback">{user.descriptionError}</div>}
-            </div>
-          </div>
 
           <button type="submit" className="btn btn-primary w-100">REGISTER</button>
         </form>
