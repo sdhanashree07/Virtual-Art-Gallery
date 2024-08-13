@@ -1,17 +1,19 @@
-import React, { useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaCogs } from 'react-icons/fa';
 
+// Initial state for the form
 const initialState = {
-  fname: "",
-  lname: "",
-  emailid: "",
-  contact: "",
-  city: "",
-  area: "",
-  username: "",
-  pwd: "",
-  role: "",
+  FirstName: "",
+  LastName: "",
+  EmailId: "",
+  Contact: "",
+  cityId: "",
+  areaId: "",
+  UserName: "",
+  Password: "",
+  roleId: "",
+  address: "",
   description: "",
   fnameError: "",
   lnameError: "",
@@ -22,9 +24,11 @@ const initialState = {
   usernameError: "",
   pwdError: "",
   roleError: "",
+  addressError: "",
   descriptionError: ""
 };
 
+// Reducer function to handle state updates
 const reducer = (state, action) => {
   switch (action.type) {
     case 'update':
@@ -38,54 +42,58 @@ const reducer = (state, action) => {
   }
 };
 
+// Validation functions
+const validateEmail = (email) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email) ? "" : "Invalid email format.";
+};
+
+const validateContactNumber = (number) => {
+  const regex = /^[0-9]{10}$/;
+  return regex.test(number) ? "" : "Contact Number must be 10 digits and contain only numbers.";
+};
+
+const validateUsername = (username) => {
+  return !/\s/.test(username) ? "" : "Username must not contain spaces.";
+};
+
+const validatePassword = (password) => {
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&])[a-z0-9!@#$%^&*]{6,}$/;
+  return regex.test(password) ? "" : "Password must contain at least one digit, one letter, and be at least 6 characters long.";
+};
+
+const validateCity = (city) => {
+  return city ? "" : "City selection is required.";
+};
+
+const validateArea = (area) => {
+  return area ? "" : "Area selection is required.";
+};
+
+const validateRole = (role) => {
+  return role ? "" : "Role selection is required.";
+};
+
+// Main registration component
 export default function RegistrationComp() {
-  const [info, dispatch] = useReducer(reducer, initialState);
+  const [user, dispatch] = useReducer(reducer, initialState);
+  const [msg, setmsg] = useState("");
 
-  // Validation functions
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email) ? "" : "Invalid email format.";
-  };
-
-  const validateContactNumber = (number) => {
-    const regex = /^[0-9]{10}$/;
-    return regex.test(number) ? "" : "Contact Number must be 10 digits and contain only numbers.";
-  };
-
-  const validateUsername = (username) => {
-    return !/\s/.test(username) ? "" : "Username must not contain spaces.";
-  };
-
-  const validatePassword = (password) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{2,}$/;
-    return regex.test(password) ? "" : "Password must contain at least one digit and one letter.";
-  };
-
-  // Additional Validation Functions
-  const validateCity = (city) => {
-    return city ? "" : "City selection is required.";
-  };
-
-  const validateArea = (area) => {
-    return area ? "" : "Area selection is required.";
-  };
-
-  const validateRole = (role) => {
-    return role ? "" : "Role selection is required.";
-  };
-
+  // Function to validate the form
   const validateForm = () => {
-    const errors = {};
-    errors.fname = info.fname ? "" : "First Name is required.";
-    errors.lname = info.lname ? "" : "Last Name is required.";
-    errors.emailid = info.emailid ? validateEmail(info.emailid) : "Email Id is required.";
-    errors.contact = info.contact ? validateContactNumber(info.contact) : "Contact Number is required.";
-    errors.city = validateCity(info.city);
-    errors.area = validateArea(info.area);
-    errors.username = info.username ? validateUsername(info.username) : "Username is required.";
-    errors.pwd = info.pwd ? validatePassword(info.pwd) : "Password is required.";
-    errors.role = validateRole(info.role);
-    errors.description = info.description ? "" : "Description is required.";
+    const errors = {
+      fnameError: user.FirstName ? "" : "First Name is required.",
+      lnameError: user.LastName ? "" : "Last Name is required.",
+      emailidError: user.EmailId ? validateEmail(user.EmailId) : "Email Id is required.",
+      contactError: user.Contact ? validateContactNumber(user.Contact) : "Contact Number is required.",
+      cityError: validateCity(user.cityId),
+      areaError: validateArea(user.areaId),
+      usernameError: user.UserName ? validateUsername(user.UserName) : "Username is required.",
+      pwdError: user.Password ? validatePassword(user.Password) : "Password is required.",
+      roleError: validateRole(user.roleId),
+      addressError: user.address ? "" : "Address is required.",
+      descriptionError: user.description ? "" : "Description is required."
+    };
 
     Object.keys(errors).forEach(key => {
       dispatch({ type: 'setError', fld: key, val: errors[key] });
@@ -94,13 +102,36 @@ export default function RegistrationComp() {
     return Object.values(errors).every(error => error === "");
   };
 
-  const handleSubmit = (e) => {
+  // Function to handle form submission
+  const submitHandle = (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Registration Info:", info);
-      // Add registration logic here
-      dispatch({ type: 'reset' });
+      const sendData = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: user.FirstName,
+          lastName: user.LastName,
+          emailId: user.EmailId,
+          contact: user.Contact,
+          areaId: user.areaId,
+          username: user.UserName,
+          password: user.Password,
+          roleId: user.roleId,
+          address: user.address,
+          artist: {
+               
+              about: user.description
+    
+          }
+        })
+      };
+
+      fetch("https://localhost:44375/api/UserManagement/Saveartist", sendData)
+        .then(resp => resp.json())
+        .then(obj => setmsg("Registration successful!"))
+        .catch(error => setmsg(error.message));
     }
   };
 
@@ -108,7 +139,7 @@ export default function RegistrationComp() {
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
       <div className="bg-light p-4 mt-5 rounded shadow-lg border" style={{ maxWidth: '500px', width: '100%' }}>
         <h1 className="text-center text-primary mb-3">Registration Form</h1>
-        <form onSubmit={handleSubmit} className="p-3">
+        <form onSubmit={submitHandle} className="p-3">
           {/* First Name */}
           <div className="mb-3">
             <label htmlFor="fname" className="form-label">First Name <span className="text-danger">*</span></label>
@@ -116,14 +147,14 @@ export default function RegistrationComp() {
               <span className="input-group-text bg-primary text-white border-0"><FaUser /></span>
               <input
                 type="text"
-                className={`form-control ${info.fnameError ? "is-invalid" : ""}`}
+                className={`form-control ${user.fnameError ? "is-invalid" : ""}`}
                 name="fname"
-                value={info.fname}
-                onChange={(e) => dispatch({ type: 'update', fld: 'fname', val: e.target.value })}
+                value={user.FirstName}
+                onChange={(e) => dispatch({ type: 'update', fld: 'FirstName', val: e.target.value })}
                 placeholder="Enter your first name"
                 required
               />
-              {info.fnameError && <div className="invalid-feedback">{info.fnameError}</div>}
+              {user.fnameError && <div className="invalid-feedback">{user.fnameError}</div>}
             </div>
           </div>
 
@@ -134,14 +165,14 @@ export default function RegistrationComp() {
               <span className="input-group-text bg-primary text-white border-0"><FaUser /></span>
               <input
                 type="text"
-                className={`form-control ${info.lnameError ? "is-invalid" : ""}`}
+                className={`form-control ${user.lnameError ? "is-invalid" : ""}`}
                 name="lname"
-                value={info.lname}
-                onChange={(e) => dispatch({ type: 'update', fld: 'lname', val: e.target.value })}
+                value={user.LastName}
+                onChange={(e) => dispatch({ type: 'update', fld: 'LastName', val: e.target.value })}
                 placeholder="Enter your last name"
                 required
               />
-              {info.lnameError && <div className="invalid-feedback">{info.lnameError}</div>}
+              {user.lnameError && <div className="invalid-feedback">{user.lnameError}</div>}
             </div>
           </div>
 
@@ -152,14 +183,14 @@ export default function RegistrationComp() {
               <span className="input-group-text bg-primary text-white border-0"><FaEnvelope /></span>
               <input
                 type="email"
-                className={`form-control ${info.emailidError ? "is-invalid" : ""}`}
+                className={`form-control ${user.emailidError ? "is-invalid" : ""}`}
                 name="emailid"
-                value={info.emailid}
-                onChange={(e) => dispatch({ type: 'update', fld: 'emailid', val: e.target.value })}
+                value={user.EmailId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'EmailId', val: e.target.value })}
                 placeholder="Enter your email"
                 required
               />
-              {info.emailidError && <div className="invalid-feedback">{info.emailidError}</div>}
+              {user.emailidError && <div className="invalid-feedback">{user.emailidError}</div>}
             </div>
           </div>
 
@@ -170,14 +201,14 @@ export default function RegistrationComp() {
               <span className="input-group-text bg-primary text-white border-0"><FaPhone /></span>
               <input
                 type="tel"
-                className={`form-control ${info.contactError ? "is-invalid" : ""}`}
+                className={`form-control ${user.contactError ? "is-invalid" : ""}`}
                 name="contact"
-                value={info.contact}
-                onChange={(e) => dispatch({ type: 'update', fld: 'contact', val: e.target.value })}
+                value={user.Contact}
+                onChange={(e) => dispatch({ type: 'update', fld: 'Contact', val: e.target.value })}
                 placeholder="Enter your contact number"
                 required
               />
-              {info.contactError && <div className="invalid-feedback">{info.contactError}</div>}
+              {user.contactError && <div className="invalid-feedback">{user.contactError}</div>}
             </div>
           </div>
 
@@ -187,20 +218,20 @@ export default function RegistrationComp() {
             <div className="input-group">
               <span className="input-group-text bg-primary text-white border-0"><FaMapMarkerAlt /></span>
               <select
-                className={`form-select ${info.cityError ? "is-invalid" : ""}`}
+                className={`form-select ${user.cityError ? "is-invalid" : ""}`}
                 name="city"
-                value={info.city}
-                onChange={(e) => dispatch({ type: 'update', fld: 'city', val: e.target.value })}
+                value={user.cityId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'cityId', val: e.target.value })}
                 required
               >
                 <option value="">Select City</option>
-                <option value="Pune">Pune</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Chennai">Chennai</option>
+                <option value="1">Agra</option>
+                <option value="2">Mumbai</option>
+                <option value="3">Delhi</option>
+                <option value="4">Bangalore</option>
+                <option value="5">Chennai</option>
               </select>
-              {info.cityError && <div className="invalid-feedback">{info.cityError}</div>}
+              {user.cityError && <div className="invalid-feedback">{user.cityError}</div>}
             </div>
           </div>
 
@@ -210,19 +241,20 @@ export default function RegistrationComp() {
             <div className="input-group">
               <span className="input-group-text bg-primary text-white border-0"><FaMapMarkerAlt /></span>
               <select
-                className={`form-select ${info.areaError ? "is-invalid" : ""}`}
+                className={`form-select ${user.areaError ? "is-invalid" : ""}`}
                 name="area"
-                value={info.area}
-                onChange={(e) => dispatch({ type: 'update', fld: 'area', val: e.target.value })}
+                value={user.areaId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'areaId', val: e.target.value })}
                 required
               >
                 <option value="">Select Area</option>
-                <option value="Area1">Area1</option>
-                <option value="Area2">Area2</option>
-                <option value="Area3">Area3</option>
-                <option value="Area4">Area4</option>
+                
+                <option value="1">Civil Lines</option>
+                <option value="2">Khandari</option>
+                <option value="3">Ellisbridge</option>
+                <option value="4">Vastrapur</option>
               </select>
-              {info.areaError && <div className="invalid-feedback">{info.areaError}</div>}
+              {user.areaError && <div className="invalid-feedback">{user.areaError}</div>}
             </div>
           </div>
 
@@ -233,14 +265,14 @@ export default function RegistrationComp() {
               <span className="input-group-text bg-primary text-white border-0"><FaUser /></span>
               <input
                 type="text"
-                className={`form-control ${info.usernameError ? "is-invalid" : ""}`}
+                className={`form-control ${user.usernameError ? "is-invalid" : ""}`}
                 name="username"
-                value={info.username}
-                onChange={(e) => dispatch({ type: 'update', fld: 'username', val: e.target.value })}
+                value={user.UserName}
+                onChange={(e) => dispatch({ type: 'update', fld: 'UserName', val: e.target.value })}
                 placeholder="Enter your username"
                 required
               />
-              {info.usernameError && <div className="invalid-feedback">{info.usernameError}</div>}
+              {user.usernameError && <div className="invalid-feedback">{user.usernameError}</div>}
             </div>
           </div>
 
@@ -251,14 +283,14 @@ export default function RegistrationComp() {
               <span className="input-group-text bg-primary text-white border-0"><FaLock /></span>
               <input
                 type="password"
-                className={`form-control ${info.pwdError ? "is-invalid" : ""}`}
+                className={`form-control ${user.pwdError ? "is-invalid" : ""}`}
                 name="pwd"
-                value={info.pwd}
-                onChange={(e) => dispatch({ type: 'update', fld: 'pwd', val: e.target.value })}
+                value={user.Password}
+                onChange={(e) => dispatch({ type: 'update', fld: 'Password', val: e.target.value })}
                 placeholder="Enter your password"
                 required
               />
-              {info.pwdError && <div className="invalid-feedback">{info.pwdError}</div>}
+              {user.pwdError && <div className="invalid-feedback">{user.pwdError}</div>}
             </div>
           </div>
 
@@ -268,18 +300,34 @@ export default function RegistrationComp() {
             <div className="input-group">
               <span className="input-group-text bg-primary text-white border-0"><FaCogs /></span>
               <select
-                className={`form-select ${info.roleError ? "is-invalid" : ""}`}
+                className={`form-select ${user.roleError ? "is-invalid" : ""}`}
                 name="role"
-                value={info.role}
-                onChange={(e) => dispatch({ type: 'update', fld: 'role', val: e.target.value })}
+                value={user.roleId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'roleId', val: e.target.value })}
                 required
               >
                 <option value="">Select Role</option>
-                <option value="Admin">Admin</option>
-                <option value="Artist">Artist</option>
-                <option value="Buyer">Buyer</option>
+                
+                <option value="2">Artist</option>
+                
               </select>
-              {info.roleError && <div className="invalid-feedback">{info.roleError}</div>}
+              {user.roleError && <div className="invalid-feedback">{user.roleError}</div>}
+            </div>
+          </div>
+
+          {/* Address */}
+          <div className="mb-3">
+            <label htmlFor="address" className="form-label">Address</label>
+            <div className="input-group">
+              <textarea
+                className={`form-control ${user.addressError ? "is-invalid" : ""}`}
+                name="address"
+                value={user.address}
+                onChange={(e) => dispatch({ type: 'update', fld: 'address', val: e.target.value })}
+                placeholder="Enter a brief address"
+                rows="3"
+              />
+              {user.addressError && <div className="invalid-feedback">{user.addressError}</div>}
             </div>
           </div>
 
@@ -288,19 +336,21 @@ export default function RegistrationComp() {
             <label htmlFor="description" className="form-label">Description</label>
             <div className="input-group">
               <textarea
-                className={`form-control ${info.descriptionError ? "is-invalid" : ""}`}
+                className={`form-control ${user.descriptionError ? "is-invalid" : ""}`}
                 name="description"
-                value={info.description}
+                value={user.description}
                 onChange={(e) => dispatch({ type: 'update', fld: 'description', val: e.target.value })}
                 placeholder="Enter a brief description"
                 rows="3"
               />
-              {info.descriptionError && <div className="invalid-feedback">{info.descriptionError}</div>}
+              {user.descriptionError && <div className="invalid-feedback">{user.descriptionError}</div>}
             </div>
           </div>
 
           <button type="submit" className="btn btn-primary w-100">REGISTER</button>
         </form>
+        <span>{msg}</span>
+        <span>{JSON.stringify(user)}</span>
       </div>
     </div>
   );
