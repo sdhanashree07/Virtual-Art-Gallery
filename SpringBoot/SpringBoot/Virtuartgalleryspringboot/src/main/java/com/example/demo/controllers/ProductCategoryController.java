@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.example.demo.entities.DummyProduct;
+import com.example.demo.entities.Product;
 import com.example.demo.entities.ProductCategory;
 import com.example.demo.services.ProductCategoryService;
 

@@ -1,42 +1,95 @@
 // components/LoginComp.js
 
-import { useReducer } from "react";
+import {useState,useReducer } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { login } from "./slice";
 
 export default function LoginComp() {
-  const navigate = useNavigate();
-
   const init = {
     uid: "",
     pwd: "",
     uidError: "",
-    pwdError: "",
-    serverError: "",
-    loading: false,
+    pwdError: ""
   };
 
   const reducer = (state, action) => {
     switch (action.type) {
-      case "update":
+      case 'update':
         return { ...state, [action.fld]: action.val };
-      case "setUidError":
+      case 'setUidError':
         return { ...state, uidError: action.val };
-      case "setPwdError":
+      case 'setPwdError':
         return { ...state, pwdError: action.val };
-      case "setServerError":
-        return { ...state, serverError: action.val };
-      case "setLoading":
-        return { ...state, loading: action.val };
-      case "reset":
+      case 'reset':
         return init;
       default:
-        return state;
+        return state; // Ensure the reducer returns a state in default case
     }
   };
 
-  const [info, dispatch] = useReducer(reducer, init);
+  const [user, dispatch] = useReducer(reducer, init);
+  const[msg , setMsg] =useState("");
+  const navigate =useNavigate();
 
+  const reduxAction = useDispatch();
+
+  const submitHandle =(e)=>{
+    e.preventDefault();
+    const reqData ={
+        method:'POST',
+        headers :{'content-type' : 'application/json'},
+        body :JSON.stringify(
+            {
+                username : user.uid,
+                password : user.pwd
+
+            }
+        )
+    }
+    fetch("http://localhost:5077/api/UserManagement/VerifyLogin" ,reqData)
+    .then (resp =>{ if(resp.ok){
+      return resp.json();
+    }
+    else
+    {
+      throw new Error("Server error");
+    }
+    })
+    .then(obj =>{
+                  if(obj === null)
+                  {
+                    setMsg("wrong UID/Password");
+                  }
+                  else
+                  {
+                    reduxAction(login())
+                    if(obj.status === false)
+                    {
+                      alert("request has not approved");
+                      navigate("/login");
+                    }
+                    else
+                    {
+                      if(obj.roleId === 1){
+                        navigate("/admin_home");
+                      }
+                      else if(obj.roleId === 2){
+                        navigate("/artist_home");
+                      }
+                      else if(obj.roleId === 3){
+                        navigate("/buyer_home");
+                      }
+                      
+                    }
+                  }
+
+    })                   
+    .catch(error => setMsg("Server error. Try after some time"));
+    
+}
+
+  // Validation function for username
   const validateUsername = (username) => {
     if (username.trim() === "") {
       return "Username cannot be empty.";
@@ -47,155 +100,78 @@ export default function LoginComp() {
     return "";
   };
 
+  // Validation function for password
   const validatePassword = (password) => {
     if (password.trim() === "") {
       return "Password cannot be empty.";
     }
-    if (!/[a-zA-Z]/.test(password)) {
+    if (!/^(?=.*[0-9])(?=.*[!@#$%^&])[A-Za-z0-9!@#$%^&*]{3,}$/.test(password)) {
       return "Password must contain at least one letter.";
     }
-    if (!/\d/.test(password)) {
-      return "Password must contain at least one number.";
-    }
+   
     return "";
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    
+    const uidError = validateUsername(user.uid);
+    const pwdError = validatePassword(user.pwd);
 
-    const uidError = validateUsername(info.uid);
-    const pwdError = validatePassword(info.pwd);
-
-    dispatch({ type: "setUidError", val: uidError });
-    dispatch({ type: "setPwdError", val: pwdError });
+    dispatch({ type: 'setUidError', val: uidError });
+    dispatch({ type: 'setPwdError', val: pwdError });
 
     if (uidError === "" && pwdError === "") {
-      dispatch({ type: "setLoading", val: true });
-      dispatch({ type: "setServerError", val: "" });
-
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/UserManagement/VerifyLogin",
-          {
-            Username: info.uid,
-            Password: info.pwd,
-          }
-        );
-
-        if (response.status === 200 && response.data) {
-          console.log("Login successful:", response.data);
-
-          localStorage.setItem("user", JSON.stringify(response.data));
-
-          const userRole = response.data.roleId;
-
-          switch (userRole) {
-            case 2: // Artist
-              navigate("/Artist");
-              break;
-            case 3: // Buyer
-              navigate("/Buyer");
-              break;
-            case 1: // Admin
-              navigate("/Admin");
-              break;
-            default:
-              navigate("/");
-          }
-
-          dispatch({ type: "reset" });
-          alert("Login successful!");
-        } else {
-          dispatch({
-            type: "setServerError",
-            val: "Invalid username or password",
-          });
-        }
-      } catch (error) {
-        console.error("Login failed:", error);
-        dispatch({
-          type: "setServerError",
-          val:
-            (error.response && error.response.data) ||
-            "Network error. Please try again later.",
-        });
-      } finally {
-        dispatch({ type: "setLoading", val: false });
-      }
+      console.log("User user:", user);
+      // Add login logic here
+      dispatch({ type: 'reset' });
     }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div
-        className="bg-light p-4 mt-5 rounded shadow-lg border"
-        style={{ maxWidth: "400px", width: "100%" }}
-      >
+      <div className="bg-light p-4 mt-5 rounded shadow-lg border" style={{ maxWidth: '400px', width: '100%' }}>
         <h1 className="text-center text-primary mb-3">Login Page</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="uid" className="form-label">
-              Username:
-            </label>
+            <label htmlFor="uid" className="form-label">Username: </label>
             <input
               type="text"
-              className={`form-control ${info.uidError ? "is-invalid" : ""}`}
+              className={`form-control ${user.uidError ? "is-invalid" : ""}`}
               name="uid"
-              value={info.uid}
+              value={user.uid}
               onChange={(e) => {
-                dispatch({ type: "update", fld: "uid", val: e.target.value });
-                dispatch({
-                  type: "setUidError",
-                  val: validateUsername(e.target.value),
-                });
+                dispatch({ type: 'update', fld: 'uid', val: e.target.value });
+                dispatch({ type: 'setUidError', val: validateUsername(e.target.value) });
               }}
               placeholder="Enter your username"
               required
             />
-            {info.uidError && (
-              <div className="invalid-feedback">{info.uidError}</div>
-            )}
+            {user.uidError && <div className="invalid-feedback">{user.uidError}</div>}
           </div>
 
           <div className="mb-3">
-            <label htmlFor="pwd" className="form-label">
-              Password:
-            </label>
+            <label htmlFor="pwd" className="form-label">Password: </label>
             <input
               type="password"
-              className={`form-control ${info.pwdError ? "is-invalid" : ""}`}
+              className={`form-control ${user.pwdError ? "is-invalid" : ""}`}
               name="pwd"
-              value={info.pwd}
+              value={user.pwd}
               onChange={(e) => {
-                dispatch({ type: "update", fld: "pwd", val: e.target.value });
-                dispatch({
-                  type: "setPwdError",
-                  val: validatePassword(e.target.value),
-                });
+                dispatch({ type: 'update', fld: 'pwd', val: e.target.value });
+                dispatch({ type: 'setPwdError', val: validatePassword(e.target.value) });
               }}
               placeholder="Enter your password"
               required
             />
-            {info.pwdError && (
-              <div className="invalid-feedback">{info.pwdError}</div>
-            )}
+            {user.pwdError && <div className="invalid-feedback">{user.pwdError}</div>}
           </div>
 
-          {info.serverError && (
-            <div className="alert alert-danger" role="alert">
-              {info.serverError}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={info.loading}
-          >
-            {info.loading ? "Logging in..." : "LOGIN"}
-          </button>
+          <button type="submit" className="btn btn-primary w-100" onClick={(e) => submitHandle(e)}>LOGIN</button>
         </form>
+        <span>{msg}</span>
       </div>
+      
     </div>
   );
 }

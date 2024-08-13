@@ -1,12 +1,11 @@
-// components/ArtistPage.js
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { FaSignOutAlt } from 'react-icons/fa'; // Importing an icon for logout
 
 export default function ArtistPage() {
   const navigate = useNavigate();
 
+  // State variables to manage artworks, categories, subcategories, and filters
   const [artworks, setArtworks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -15,16 +14,23 @@ export default function ArtistPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    // Fetch data from APIs using the fetch method
     const fetchData = async () => {
       try {
-        // Fetch artworks, categories, and subcategories from the API
-        const artworksResponse = await axios.get('http://localhost:5000/api/Artworks');
-        const categoriesResponse = await axios.get('http://localhost:5000/api/Categories');
-        const subcategoriesResponse = await axios.get('http://localhost:5000/api/Subcategories');
+        // Fetch artworks data
+        const artworksResponse = await fetch('http://localhost:5000/api/Artworks');
+        const artworksData = await artworksResponse.json();
+        setArtworks(artworksData);
 
-        setArtworks(artworksResponse.data);
-        setCategories(categoriesResponse.data);
-        setSubcategories(subcategoriesResponse.data);
+        // Fetch categories data
+        const categoriesResponse = await fetch('http://localhost:5000/api/Categories');
+        const categoriesData = await categoriesResponse.json();
+        setCategories(categoriesData);
+
+        // Fetch subcategories data
+        const subcategoriesResponse = await fetch('http://localhost:5000/api/Subcategories');
+        const subcategoriesData = await subcategoriesResponse.json();
+        setSubcategories(subcategoriesData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -33,30 +39,38 @@ export default function ArtistPage() {
     fetchData();
   }, []);
 
+  // Handle search input change
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  // Handle logout action
   const handleLogout = () => {
-    // Clear user data from localStorage
-    localStorage.removeItem('user');
-    // Navigate to the home page
-    navigate('/');
+    localStorage.removeItem('user'); // Remove user data from localStorage
+    navigate('/'); // Redirect to the homepage
   };
 
+  // Handle filter reset
+  const handleFilter = () => {
+    setSelectedCategory('');
+    setSelectedSubcategory('');
+    setSearchTerm('');
+  };
+
+  // Filter artworks based on selected category, subcategory, and search term
   const filteredArtworks = artworks.filter((artwork) => {
     return (
       (selectedCategory === '' || artwork.categoryId === selectedCategory) &&
       (selectedSubcategory === '' || artwork.subcategoryId === selectedSubcategory) &&
-      (searchTerm === '' || artwork.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      (searchTerm === '' || artwork.art_name.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
 
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="artist-info">
-          <h3>Welcome, Artist Name</h3>
+          <h3>Welcome, Artist Name</h3> {/* Update "Artist Name" dynamically if needed */}
         </div>
         <div className="search-logout d-flex align-items-center">
           <input
@@ -66,7 +80,10 @@ export default function ArtistPage() {
             value={searchTerm}
             onChange={handleSearch}
           />
-          <button className="btn btn-outline-primary ms-2" onClick={handleLogout}>Logout</button>
+          <button className="btn btn-outline-primary ms-2" onClick={handleLogout}>
+            <FaSignOutAlt className="me-1" /> {/* Logout icon */}
+            Logout
+          </button>
         </div>
       </div>
 
@@ -97,29 +114,74 @@ export default function ArtistPage() {
           ))}
         </select>
 
-        <button className="btn btn-secondary">Filter</button>
+        <button className="btn btn-secondary" onClick={handleFilter}>
+          Clear Filters
+        </button>
       </div>
 
       <div className="row">
-        {filteredArtworks.map((artwork) => (
-          <div className="col-md-4 col-sm-6 mb-4" key={artwork.art_id}>
-            <div className="card h-100">
-              <img
-                src={artwork.art_photo}
-                className="card-img-top"
-                alt={artwork.art_name}
-              />
-              <div className="card-body">
-                <h5 className="card-title">{artwork.art_name}</h5>
-                <p className="card-text">{artwork.description}</p>
-                <p className="card-text">
-                  <small className="text-muted">Category: {artwork.categoryName}</small>
-                </p>
+        {filteredArtworks.length > 0 ? (
+          filteredArtworks.map((artwork) => (
+            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={artwork.art_id}>
+              <div className="card h-100">
+                <img
+                  src={artwork.art_photo}
+                  className="card-img-top"
+                  alt={artwork.art_name}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{artwork.art_name}</h5>
+                  <p className="card-text">{artwork.description}</p>
+                  <p className="card-text">
+                    <small className="text-muted">Category: {artwork.categoryName}</small>
+                  </p>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="col-12">
+            <p className="text-center">No artworks found.</p>
           </div>
-        ))}
+        )}
       </div>
+
+      <style jsx>{`
+        .container {
+          background-color: #f8f9fa; /* Light background color */
+          padding: 1rem;
+          max-width: 100%; /* Utilize full width */
+        }
+
+        .artist-info h3 {
+          margin: 0;
+          font-size: 1.5rem;
+        }
+
+        .search-logout input {
+          flex: 1;
+          max-width: 300px; /* Limit width for search input */
+        }
+
+        .card-img-top {
+          object-fit: cover;
+          height: 200px;
+        }
+
+        .card-body {
+          padding: 1rem;
+        }
+
+        .btn-outline-primary {
+          border-color: #007bff;
+          color: #007bff;
+        }
+
+        .btn-outline-primary:hover {
+          background-color: #007bff;
+          color: #fff;
+        }
+      `}</style>
     </div>
   );
 }

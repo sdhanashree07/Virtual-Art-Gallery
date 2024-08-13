@@ -1,442 +1,356 @@
-// components/RegistrationComp.js
+import React, { useState, useReducer } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLock, FaCogs } from 'react-icons/fa';
 
-import React, { useReducer } from "react";
-import axios from "axios";
+// Initial state for the form
+const initialState = {
+  FirstName: "",
+  LastName: "",
+  EmailId: "",
+  Contact: "",
+  cityId: "",
+  areaId: "",
+  UserName: "",
+  Password: "",
+  roleId: "",
+  address: "",
+  description: "",
+  fnameError: "",
+  lnameError: "",
+  emailidError: "",
+  contactError: "",
+  cityError: "",
+  areaError: "",
+  usernameError: "",
+  pwdError: "",
+  roleError: "",
+  addressError: "",
+  descriptionError: ""
+};
 
+// Reducer function to handle state updates
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'update':
+      return { ...state, [action.fld]: action.val };
+    case 'setError':
+      return { ...state, [`${action.fld}Error`]: action.val };
+    case 'reset':
+      return initialState;
+    default:
+      return state;
+  }
+};
+
+// Validation functions
+const validateEmail = (email) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email) ? "" : "Invalid email format.";
+};
+
+const validateContactNumber = (number) => {
+  const regex = /^[0-9]{10}$/;
+  return regex.test(number) ? "" : "Contact Number must be 10 digits and contain only numbers.";
+};
+
+const validateUsername = (username) => {
+  return !/\s/.test(username) ? "" : "Username must not contain spaces.";
+};
+
+const validatePassword = (password) => {
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&])[a-z0-9!@#$%^&*]{6,}$/;
+  return regex.test(password) ? "" : "Password must contain at least one digit, one letter, and be at least 6 characters long.";
+};
+
+const validateCity = (city) => {
+  return city ? "" : "City selection is required.";
+};
+
+const validateArea = (area) => {
+  return area ? "" : "Area selection is required.";
+};
+
+const validateRole = (role) => {
+  return role ? "" : "Role selection is required.";
+};
+
+// Main registration component
 export default function RegistrationComp() {
-  const init = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    contact: "",
-    areaId: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-    roleId: "1", // Default role ID for buyer
-    errors: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      contact: "",
-      areaId: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-      server: "",
-    },
-    loading: false,
-  };
+  const [user, dispatch] = useReducer(reducer, initialState);
+  const [msg, setmsg] = useState("");
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "update":
-        return { ...state, [action.fld]: action.val };
-      case "setErrors":
-        return { ...state, errors: { ...state.errors, ...action.val } };
-      case "setLoading":
-        return { ...state, loading: action.val };
-      case "reset":
-        return init;
-      default:
-        return state;
-    }
-  };
-
-  const [info, dispatch] = useReducer(reducer, init);
-
-  // Validation functions
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email.trim() === "") {
-      return "Email cannot be empty.";
-    }
-    if (!emailRegex.test(email)) {
-      return "Invalid email format.";
-    }
-    return "";
-  };
-
-  const validateContact = (contact) => {
-    const phoneRegex = /^\d{10}$/;
-    if (contact.trim() === "") {
-      return "Contact cannot be empty.";
-    }
-    if (!phoneRegex.test(contact)) {
-      return "Contact must be a 10-digit number.";
-    }
-    return "";
-  };
-
-  const validateField = (field, value) => {
-    if (value.trim() === "") {
-      return `${field} cannot be empty.`;
-    }
-    return "";
-  };
-
-  const validatePassword = (password) => {
-    if (password.trim() === "") {
-      return "Password cannot be empty.";
-    }
-    if (!/[a-zA-Z]/.test(password)) {
-      return "Password must contain at least one letter.";
-    }
-    if (!/\d/.test(password)) {
-      return "Password must contain at least one number.";
-    }
-    return "";
-  };
-
-  const validateConfirmPassword = (password, confirmPassword) => {
-    if (confirmPassword !== password) {
-      return "Passwords do not match.";
-    }
-    return "";
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const firstNameError = validateField("First Name", info.firstName);
-    const lastNameError = validateField("Last Name", info.lastName);
-    const emailError = validateEmail(info.email);
-    const contactError = validateContact(info.contact);
-    const areaIdError = validateField("Area", info.areaId);
-    const usernameError = validateField("Username", info.username);
-    const passwordError = validatePassword(info.password);
-    const confirmPasswordError = validateConfirmPassword(
-      info.password,
-      info.confirmPassword
-    );
-
-    const newErrors = {
-      firstName: firstNameError,
-      lastName: lastNameError,
-      email: emailError,
-      contact: contactError,
-      areaId: areaIdError,
-      username: usernameError,
-      password: passwordError,
-      confirmPassword: confirmPasswordError,
-      server: "",
+  // Function to validate the form
+  const validateForm = () => {
+    const errors = {
+      fnameError: user.FirstName ? "" : "First Name is required.",
+      lnameError: user.LastName ? "" : "Last Name is required.",
+      emailidError: user.EmailId ? validateEmail(user.EmailId) : "Email Id is required.",
+      contactError: user.Contact ? validateContactNumber(user.Contact) : "Contact Number is required.",
+      cityError: validateCity(user.cityId),
+      areaError: validateArea(user.areaId),
+      usernameError: user.UserName ? validateUsername(user.UserName) : "Username is required.",
+      pwdError: user.Password ? validatePassword(user.Password) : "Password is required.",
+      roleError: validateRole(user.roleId),
+      addressError: user.address ? "" : "Address is required.",
+      descriptionError: user.description ? "" : "Description is required."
     };
 
-    dispatch({ type: "setErrors", val: newErrors });
+    Object.keys(errors).forEach(key => {
+      dispatch({ type: 'setError', fld: key, val: errors[key] });
+    });
 
-    const hasErrors = Object.values(newErrors).some((error) => error !== "");
-    if (!hasErrors) {
-      dispatch({ type: "setLoading", val: true });
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/UserManagement/SaveUser", // Endpoint for saving user
-          {
-            FirstName: info.firstName,
-            LastName: info.lastName,
-            EmailId: info.email,
-            Contact: info.contact,
-            AreaId: parseInt(info.areaId),
-            Username: info.username,
-            Password: info.password,
-            RoleId: parseInt(info.roleId),
+    return Object.values(errors).every(error => error === "");
+  };
+
+  // Function to handle form submission
+  const submitHandle = (e) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      const sendData = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: user.FirstName,
+          lastName: user.LastName,
+          emailId: user.EmailId,
+          contact: user.Contact,
+          areaId: user.areaId,
+          username: user.UserName,
+          password: user.Password,
+          roleId: user.roleId,
+          address: user.address,
+          artist: {
+               
+              about: user.description
+    
           }
-        );
+        })
+      };
 
-        if (response.status === 200 && response.data) {
-          console.log("Registration successful:", response.data);
-          dispatch({ type: "reset" });
-          alert("Registration successful!"); // Notify the user
-        } else {
-          dispatch({
-            type: "setErrors",
-            val: { server: "Registration failed. Please try again." },
-          });
-        }
-      } catch (error) {
-        console.error("Registration failed:", error);
-        dispatch({
-          type: "setErrors",
-          val: {
-            server:
-              (error.response && error.response.data.message) ||
-              "Network error. Please try again later.",
-          },
-        });
-      } finally {
-        dispatch({ type: "setLoading", val: false });
-      }
+      fetch("https://localhost:44375/api/UserManagement/Saveartist", sendData)
+        .then(resp => resp.json())
+        .then(obj => setmsg("Registration successful!"))
+        .catch(error => setmsg(error.message));
     }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div
-        className="bg-light p-4 mt-5 rounded shadow-lg border"
-        style={{ maxWidth: "600px", width: "100%" }}
-      >
-        <h1 className="text-center text-primary mb-3">Registration Page</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="firstName" className="form-label">
-                First Name:
-              </label>
+      <div className="bg-light p-4 mt-5 rounded shadow-lg border" style={{ maxWidth: '500px', width: '100%' }}>
+        <h1 className="text-center text-primary mb-3">Registration Form</h1>
+        <form onSubmit={submitHandle} className="p-3">
+          {/* First Name */}
+          <div className="mb-3">
+            <label htmlFor="fname" className="form-label">First Name <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaUser /></span>
               <input
                 type="text"
-                className={`form-control ${
-                  info.errors.firstName ? "is-invalid" : ""
-                }`}
-                name="firstName"
-                value={info.firstName}
-                onChange={(e) => {
-                  dispatch({
-                    type: "update",
-                    fld: "firstName",
-                    val: e.target.value,
-                  });
-                  dispatch({
-                    type: "setErrors",
-                    val: { firstName: validateField("First Name", e.target.value) },
-                  });
-                }}
+                className={`form-control ${user.fnameError ? "is-invalid" : ""}`}
+                name="fname"
+                value={user.FirstName}
+                onChange={(e) => dispatch({ type: 'update', fld: 'FirstName', val: e.target.value })}
                 placeholder="Enter your first name"
                 required
               />
-              {info.errors.firstName && (
-                <div className="invalid-feedback">{info.errors.firstName}</div>
-              )}
+              {user.fnameError && <div className="invalid-feedback">{user.fnameError}</div>}
             </div>
+          </div>
 
-            <div className="col-md-6 mb-3">
-              <label htmlFor="lastName" className="form-label">
-                Last Name:
-              </label>
+          {/* Last Name */}
+          <div className="mb-3">
+            <label htmlFor="lname" className="form-label">Last Name <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaUser /></span>
               <input
                 type="text"
-                className={`form-control ${
-                  info.errors.lastName ? "is-invalid" : ""
-                }`}
-                name="lastName"
-                value={info.lastName}
-                onChange={(e) => {
-                  dispatch({
-                    type: "update",
-                    fld: "lastName",
-                    val: e.target.value,
-                  });
-                  dispatch({
-                    type: "setErrors",
-                    val: { lastName: validateField("Last Name", e.target.value) },
-                  });
-                }}
+                className={`form-control ${user.lnameError ? "is-invalid" : ""}`}
+                name="lname"
+                value={user.LastName}
+                onChange={(e) => dispatch({ type: 'update', fld: 'LastName', val: e.target.value })}
                 placeholder="Enter your last name"
                 required
               />
-              {info.errors.lastName && (
-                <div className="invalid-feedback">{info.errors.lastName}</div>
-              )}
+              {user.lnameError && <div className="invalid-feedback">{user.lnameError}</div>}
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="email" className="form-label">
-                Email:
-              </label>
+          {/* Email Id */}
+          <div className="mb-3">
+            <label htmlFor="emailid" className="form-label">Email Id <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaEnvelope /></span>
               <input
                 type="email"
-                className={`form-control ${
-                  info.errors.email ? "is-invalid" : ""
-                }`}
-                name="email"
-                value={info.email}
-                onChange={(e) => {
-                  dispatch({ type: "update", fld: "email", val: e.target.value });
-                  dispatch({
-                    type: "setErrors",
-                    val: { email: validateEmail(e.target.value) },
-                  });
-                }}
+                className={`form-control ${user.emailidError ? "is-invalid" : ""}`}
+                name="emailid"
+                value={user.EmailId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'EmailId', val: e.target.value })}
                 placeholder="Enter your email"
                 required
               />
-              {info.errors.email && (
-                <div className="invalid-feedback">{info.errors.email}</div>
-              )}
+              {user.emailidError && <div className="invalid-feedback">{user.emailidError}</div>}
             </div>
+          </div>
 
-            <div className="col-md-6 mb-3">
-              <label htmlFor="contact" className="form-label">
-                Contact:
-              </label>
+          {/* Contact Number */}
+          <div className="mb-3">
+            <label htmlFor="contact" className="form-label">Contact Number <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaPhone /></span>
               <input
-                type="text"
-                className={`form-control ${
-                  info.errors.contact ? "is-invalid" : ""
-                }`}
+                type="tel"
+                className={`form-control ${user.contactError ? "is-invalid" : ""}`}
                 name="contact"
-                value={info.contact}
-                onChange={(e) => {
-                  dispatch({
-                    type: "update",
-                    fld: "contact",
-                    val: e.target.value,
-                  });
-                  dispatch({
-                    type: "setErrors",
-                    val: { contact: validateContact(e.target.value) },
-                  });
-                }}
+                value={user.Contact}
+                onChange={(e) => dispatch({ type: 'update', fld: 'Contact', val: e.target.value })}
                 placeholder="Enter your contact number"
                 required
               />
-              {info.errors.contact && (
-                <div className="invalid-feedback">{info.errors.contact}</div>
-              )}
+              {user.contactError && <div className="invalid-feedback">{user.contactError}</div>}
             </div>
           </div>
 
+          {/* City */}
           <div className="mb-3">
-            <label htmlFor="areaId" className="form-label">
-              Area:
-            </label>
-            <input
-              type="text"
-              className={`form-control ${
-                info.errors.areaId ? "is-invalid" : ""
-              }`}
-              name="areaId"
-              value={info.areaId}
-              onChange={(e) => {
-                dispatch({
-                  type: "update",
-                  fld: "areaId",
-                  val: e.target.value,
-                });
-                dispatch({
-                  type: "setErrors",
-                  val: { areaId: validateField("Area", e.target.value) },
-                });
-              }}
-              placeholder="Enter your area ID"
-              required
-            />
-            {info.errors.areaId && (
-              <div className="invalid-feedback">{info.errors.areaId}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="username" className="form-label">
-              Username:
-            </label>
-            <input
-              type="text"
-              className={`form-control ${
-                info.errors.username ? "is-invalid" : ""
-              }`}
-              name="username"
-              value={info.username}
-              onChange={(e) => {
-                dispatch({
-                  type: "update",
-                  fld: "username",
-                  val: e.target.value,
-                });
-                dispatch({
-                  type: "setErrors",
-                  val: { username: validateField("Username", e.target.value) },
-                });
-              }}
-              placeholder="Choose a username"
-              required
-            />
-            {info.errors.username && (
-              <div className="invalid-feedback">{info.errors.username}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Password:
-            </label>
-            <input
-              type="password"
-              className={`form-control ${
-                info.errors.password ? "is-invalid" : ""
-              }`}
-              name="password"
-              value={info.password}
-              onChange={(e) => {
-                dispatch({
-                  type: "update",
-                  fld: "password",
-                  val: e.target.value,
-                });
-                dispatch({
-                  type: "setErrors",
-                  val: { password: validatePassword(e.target.value) },
-                });
-              }}
-              placeholder="Choose a password"
-              required
-            />
-            {info.errors.password && (
-              <div className="invalid-feedback">{info.errors.password}</div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirm Password:
-            </label>
-            <input
-              type="password"
-              className={`form-control ${
-                info.errors.confirmPassword ? "is-invalid" : ""
-              }`}
-              name="confirmPassword"
-              value={info.confirmPassword}
-              onChange={(e) => {
-                dispatch({
-                  type: "update",
-                  fld: "confirmPassword",
-                  val: e.target.value,
-                });
-                dispatch({
-                  type: "setErrors",
-                  val: {
-                    confirmPassword: validateConfirmPassword(
-                      info.password,
-                      e.target.value
-                    ),
-                  },
-                });
-              }}
-              placeholder="Confirm your password"
-              required
-            />
-            {info.errors.confirmPassword && (
-              <div className="invalid-feedback">
-                {info.errors.confirmPassword}
-              </div>
-            )}
-          </div>
-
-          {info.errors.server && (
-            <div className="alert alert-danger" role="alert">
-              {info.errors.server}
+            <label htmlFor="city" className="form-label">Select City <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaMapMarkerAlt /></span>
+              <select
+                className={`form-select ${user.cityError ? "is-invalid" : ""}`}
+                name="city"
+                value={user.cityId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'cityId', val: e.target.value })}
+                required
+              >
+                <option value="">Select City</option>
+                <option value="1">Agra</option>
+                <option value="2">Mumbai</option>
+                <option value="3">Delhi</option>
+                <option value="4">Bangalore</option>
+                <option value="5">Chennai</option>
+              </select>
+              {user.cityError && <div className="invalid-feedback">{user.cityError}</div>}
             </div>
-          )}
+          </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={info.loading}
-          >
-            {info.loading ? "Registering..." : "REGISTER"}
-          </button>
+          {/* Area */}
+          <div className="mb-3">
+            <label htmlFor="area" className="form-label">Select Area <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaMapMarkerAlt /></span>
+              <select
+                className={`form-select ${user.areaError ? "is-invalid" : ""}`}
+                name="area"
+                value={user.areaId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'areaId', val: e.target.value })}
+                required
+              >
+                <option value="">Select Area</option>
+                
+                <option value="1">Civil Lines</option>
+                <option value="2">Khandari</option>
+                <option value="3">Ellisbridge</option>
+                <option value="4">Vastrapur</option>
+              </select>
+              {user.areaError && <div className="invalid-feedback">{user.areaError}</div>}
+            </div>
+          </div>
+
+          {/* Username */}
+          <div className="mb-3">
+            <label htmlFor="username" className="form-label">Username <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaUser /></span>
+              <input
+                type="text"
+                className={`form-control ${user.usernameError ? "is-invalid" : ""}`}
+                name="username"
+                value={user.UserName}
+                onChange={(e) => dispatch({ type: 'update', fld: 'UserName', val: e.target.value })}
+                placeholder="Enter your username"
+                required
+              />
+              {user.usernameError && <div className="invalid-feedback">{user.usernameError}</div>}
+            </div>
+          </div>
+
+          {/* Password */}
+          <div className="mb-3">
+            <label htmlFor="pwd" className="form-label">Password <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaLock /></span>
+              <input
+                type="password"
+                className={`form-control ${user.pwdError ? "is-invalid" : ""}`}
+                name="pwd"
+                value={user.Password}
+                onChange={(e) => dispatch({ type: 'update', fld: 'Password', val: e.target.value })}
+                placeholder="Enter your password"
+                required
+              />
+              {user.pwdError && <div className="invalid-feedback">{user.pwdError}</div>}
+            </div>
+          </div>
+
+          {/* Role */}
+          <div className="mb-3">
+            <label htmlFor="role" className="form-label">Select Role <span className="text-danger">*</span></label>
+            <div className="input-group">
+              <span className="input-group-text bg-primary text-white border-0"><FaCogs /></span>
+              <select
+                className={`form-select ${user.roleError ? "is-invalid" : ""}`}
+                name="role"
+                value={user.roleId}
+                onChange={(e) => dispatch({ type: 'update', fld: 'roleId', val: e.target.value })}
+                required
+              >
+                <option value="">Select Role</option>
+                
+                <option value="2">Artist</option>
+                
+              </select>
+              {user.roleError && <div className="invalid-feedback">{user.roleError}</div>}
+            </div>
+          </div>
+
+          {/* Address */}
+          <div className="mb-3">
+            <label htmlFor="address" className="form-label">Address</label>
+            <div className="input-group">
+              <textarea
+                className={`form-control ${user.addressError ? "is-invalid" : ""}`}
+                name="address"
+                value={user.address}
+                onChange={(e) => dispatch({ type: 'update', fld: 'address', val: e.target.value })}
+                placeholder="Enter a brief address"
+                rows="3"
+              />
+              {user.addressError && <div className="invalid-feedback">{user.addressError}</div>}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">Description</label>
+            <div className="input-group">
+              <textarea
+                className={`form-control ${user.descriptionError ? "is-invalid" : ""}`}
+                name="description"
+                value={user.description}
+                onChange={(e) => dispatch({ type: 'update', fld: 'description', val: e.target.value })}
+                placeholder="Enter a brief description"
+                rows="3"
+              />
+              {user.descriptionError && <div className="invalid-feedback">{user.descriptionError}</div>}
+            </div>
+          </div>
+
+          <button type="submit" className="btn btn-primary w-100">REGISTER</button>
         </form>
+        <span>{msg}</span>
+        <span>{JSON.stringify(user)}</span>
       </div>
     </div>
   );
