@@ -17,6 +17,12 @@ public class ProductCategoryService {
 	public List<ProductCategory> getPCategory(){
 		return pcrepo.findAll();
 	}
+	
+	public ProductCategory addPCategory(ProductCategory pc) {
+		return pcrepo.save(pc);
+	}
+	
+	
 
 	
 }
