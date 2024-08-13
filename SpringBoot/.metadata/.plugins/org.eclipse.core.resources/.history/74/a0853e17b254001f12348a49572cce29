@@ -1,0 +1,17 @@
+package com.example.demo.entities;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name ="artwork")
+public class ArtWork {
+	@Id
+	int art_id ;
+	int amount;
+	String art_name ,description ,dimension ;
+	float weight ;
+	Artist artist_id ;
+	ASubCategory sub_cat_id;
+}

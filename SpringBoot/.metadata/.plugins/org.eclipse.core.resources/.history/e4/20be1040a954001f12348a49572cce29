@@ -1,0 +1,15 @@
+package com.example.demo.entities;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name= "art_sub_category")
+public class ASubCategory {
+
+	@Id
+	int sc_id;
+	String sc_name , description;
+	ArtCategory acat_id;
+}

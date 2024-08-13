@@ -1,9 +1,18 @@
+
+
+
+
+
+
+
+
 import { Link } from 'react-router-dom';
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 
 export default function ArtistPage(){   
     return(
          <div>
+
            
            <nav className="navbar navbar-expand-lg navbar-light bg-light px-3" >
         <div className="container-fluid">

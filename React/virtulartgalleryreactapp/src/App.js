@@ -17,6 +17,7 @@ import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import LogoutComp from './components/LogoutComp';
 import RegistrationBuyerComp from './components/RegistrationBuyer';
+import AddBrand from './components/AddBrand';
 
 function App() {
  const mystate = useSelector((state) => state.logged);
@@ -57,6 +58,8 @@ function App() {
           <Route path ="/artist_home" element={<ArtistPage/>}/>
           <Route path ="/buyer_home" element={<BuyerPage/>}/>
           <Route path ="/logout" element={<LogoutComp/>}/>
+          <Route path ="/AddBrand" element={<AddBrand/>}/>
+
         </Routes>
  
     </div>
