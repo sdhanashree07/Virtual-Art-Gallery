@@ -1,6 +1,9 @@
 // components/LoginComp.js
 
-import { useReducer } from "react";
+import {useState,useReducer } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "./slice";
 
 export default function LoginComp() {
   const init = {
@@ -25,7 +28,66 @@ export default function LoginComp() {
     }
   };
 
-  const [info, dispatch] = useReducer(reducer, init);
+  const [user, dispatch] = useReducer(reducer, init);
+  const[msg , setMsg] =useState("");
+  const navigate =useNavigate();
+
+  const reduxAction = useDispatch();
+
+  const submitHandle =(e)=>{
+    e.preventDefault();
+    const reqData ={
+        method:'POST',
+        headers :{'content-type' : 'application/json'},
+        body :JSON.stringify(
+            {
+                username : user.uid,
+                password : user.pwd
+
+            }
+        )
+    }
+    fetch("http://localhost:5077/api/UserManagement/VerifyLogin" ,reqData)
+    .then (resp =>{ if(resp.ok){
+      return resp.json();
+    }
+    else
+    {
+      throw new Error("Server error");
+    }
+    })
+    .then(obj =>{
+                  if(obj === null)
+                  {
+                    setMsg("wrong UID/Password");
+                  }
+                  else
+                  {
+                    reduxAction(login())
+                    if(obj.status === false)
+                    {
+                      alert("request has not approved");
+                      navigate("/login");
+                    }
+                    else
+                    {
+                      if(obj.roleId === 1){
+                        navigate("/admin_home");
+                      }
+                      else if(obj.roleId === 2){
+                        navigate("/artist_home");
+                      }
+                      else if(obj.roleId === 3){
+                        navigate("/buyer_home");
+                      }
+                      
+                    }
+                  }
+
+    })                   
+    .catch(error => setMsg("Server error. Try after some time"));
+    
+}
 
   // Validation function for username
   const validateUsername = (username) => {
@@ -43,26 +105,24 @@ export default function LoginComp() {
     if (password.trim() === "") {
       return "Password cannot be empty.";
     }
-    if (!/[a-zA-Z]/.test(password)) {
+    if (!/^(?=.*[0-9])(?=.*[!@#$%^&])[A-Za-z0-9!@#$%^&*]{3,}$/.test(password)) {
       return "Password must contain at least one letter.";
     }
-    if (!/\d/.test(password)) {
-      return "Password must contain at least one number.";
-    }
+   
     return "";
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const uidError = validateUsername(info.uid);
-    const pwdError = validatePassword(info.pwd);
+    const uidError = validateUsername(user.uid);
+    const pwdError = validatePassword(user.pwd);
 
     dispatch({ type: 'setUidError', val: uidError });
     dispatch({ type: 'setPwdError', val: pwdError });
 
     if (uidError === "" && pwdError === "") {
-      console.log("User Info:", info);
+      console.log("User user:", user);
       // Add login logic here
       dispatch({ type: 'reset' });
     }
@@ -77,9 +137,9 @@ export default function LoginComp() {
             <label htmlFor="uid" className="form-label">Username: </label>
             <input
               type="text"
-              className={`form-control ${info.uidError ? "is-invalid" : ""}`}
+              className={`form-control ${user.uidError ? "is-invalid" : ""}`}
               name="uid"
-              value={info.uid}
+              value={user.uid}
               onChange={(e) => {
                 dispatch({ type: 'update', fld: 'uid', val: e.target.value });
                 dispatch({ type: 'setUidError', val: validateUsername(e.target.value) });
@@ -87,16 +147,16 @@ export default function LoginComp() {
               placeholder="Enter your username"
               required
             />
-            {info.uidError && <div className="invalid-feedback">{info.uidError}</div>}
+            {user.uidError && <div className="invalid-feedback">{user.uidError}</div>}
           </div>
 
           <div className="mb-3">
             <label htmlFor="pwd" className="form-label">Password: </label>
             <input
               type="password"
-              className={`form-control ${info.pwdError ? "is-invalid" : ""}`}
+              className={`form-control ${user.pwdError ? "is-invalid" : ""}`}
               name="pwd"
-              value={info.pwd}
+              value={user.pwd}
               onChange={(e) => {
                 dispatch({ type: 'update', fld: 'pwd', val: e.target.value });
                 dispatch({ type: 'setPwdError', val: validatePassword(e.target.value) });
@@ -104,12 +164,14 @@ export default function LoginComp() {
               placeholder="Enter your password"
               required
             />
-            {info.pwdError && <div className="invalid-feedback">{info.pwdError}</div>}
+            {user.pwdError && <div className="invalid-feedback">{user.pwdError}</div>}
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">LOGIN</button>
+          <button type="submit" className="btn btn-primary w-100" onClick={(e) => submitHandle(e)}>LOGIN</button>
         </form>
+        <span>{msg}</span>
       </div>
+      
     </div>
   );
 }
