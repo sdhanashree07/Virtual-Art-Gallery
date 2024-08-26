@@ -1,6 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `virtual_art_gallery` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `virtual_art_gallery`;
--- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
 --
 -- Host: localhost    Database: virtual_art_gallery
 -- ------------------------------------------------------
@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `area`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `area` (
   `area_id` int NOT NULL AUTO_INCREMENT,
-  `area_name` varchar(80) NOT NULL,
+  `area_name` varchar(255) DEFAULT NULL,
   `pincode` int NOT NULL,
   `city_id` int NOT NULL,
   PRIMARY KEY (`area_id`),
@@ -53,11 +53,11 @@ DROP TABLE IF EXISTS `art_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `art_category` (
-  `acat_id` int NOT NULL,
-  `acat_name` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `acat_id` int NOT NULL AUTO_INCREMENT,
+  `acat_name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`acat_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,13 +78,16 @@ DROP TABLE IF EXISTS `art_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `art_order` (
-  `aor_id` int NOT NULL,
+  `aor_id` int NOT NULL AUTO_INCREMENT,
   `aor_date` date NOT NULL,
-  `payment_status` varchar(100) NOT NULL,
-  `order_status` varchar(100) NOT NULL,
+  `payment_status` int NOT NULL,
+  `order_status` int NOT NULL,
   `user_id` int NOT NULL,
+  `artwork_id` int DEFAULT NULL,
   PRIMARY KEY (`aor_id`),
+  UNIQUE KEY `UKa8m87aoikorc261gugbn9bmm` (`artwork_id`),
   KEY `user_id_fk_idx` (`user_id`),
+  CONSTRAINT `FKrp1abukegwx5n2ok0uedesmob` FOREIGN KEY (`artwork_id`) REFERENCES `artwork` (`art_id`),
   CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -106,14 +109,14 @@ DROP TABLE IF EXISTS `art_sub_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `art_sub_category` (
-  `sc_id` int NOT NULL,
-  `sc_name` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `sc_id` int NOT NULL AUTO_INCREMENT,
+  `sc_name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `acat_id` int NOT NULL,
   PRIMARY KEY (`sc_id`),
   KEY `acat_id_fk_idx` (`acat_id`),
   CONSTRAINT `acat_id_fk` FOREIGN KEY (`acat_id`) REFERENCES `art_category` (`acat_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,6 +125,7 @@ CREATE TABLE `art_sub_category` (
 
 LOCK TABLES `art_sub_category` WRITE;
 /*!40000 ALTER TABLE `art_sub_category` DISABLE KEYS */;
+INSERT INTO `art_sub_category` VALUES (1,'Madhubani Paintings',' Madhubani Painting is very beauty full Art Workd',1),(2,'Warli Paintings','Warli Paintings is very beauty full Art work.',1),(3,'Nature Paintings','Natures Paintings is very nice Art work Painting',1),(4,'Land Art Sculpture','Land art is vert nice art work',2),(5,'Cast Sculpture','Cast sculpture is very nice art work',2),(6,'Relif sculpture','Relif sculpture is very nice art work',2),(7,'Fine Art Photography','Fine art photography is very nice photography',3),(8,'Portrait Photography','Portrait Photography is very nice photography',3),(9,'Astrophotography','Astrophotography is very nice photography',3),(10,'Technical Drawing','Technical drawing is very nice art work',4),(11,'Drawing','Drawing is very nice art work',4),(12,'Doodling Drawing','Doodling drawing is very nice drawing',4);
 /*!40000 ALTER TABLE `art_sub_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -134,7 +138,7 @@ DROP TABLE IF EXISTS `artist`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `artist` (
   `id` int NOT NULL,
-  `about` varchar(200) DEFAULT NULL,
+  `about` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `userid_fk` FOREIGN KEY (`id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -146,7 +150,7 @@ CREATE TABLE `artist` (
 
 LOCK TABLES `artist` WRITE;
 /*!40000 ALTER TABLE `artist` DISABLE KEYS */;
-INSERT INTO `artist` VALUES (7,'hello'),(10,'hello'),(11,'xxxxxxxxxxxxxx'),(12,'yyyyyyyyyyyyyyyy'),(13,'ooooooooooooooooo'),(16,'rrrrrrrrrrrrrrrrrrrrrrr');
+INSERT INTO `artist` VALUES (7,'hello'),(10,'hello'),(11,'xxxxxxxxxxxxxx'),(12,'yyyyyyyyyyyyyyyy'),(13,'ooooooooooooooooo'),(16,'rrrrrrrrrrrrrrrrrrrrrrr'),(17,'aaaaaaaaaaa'),(18,'asdsd'),(19,'asdsd'),(20,'asdsd'),(21,'asdsd'),(22,'asdsd'),(23,'asdsd'),(24,'asdsd'),(25,'sad'),(26,'sdf');
 /*!40000 ALTER TABLE `artist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,20 +162,23 @@ DROP TABLE IF EXISTS `artwork`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `artwork` (
-  `art_id` int NOT NULL,
-  `art_name` varchar(100) NOT NULL,
-  `art_photo` blob NOT NULL,
-  `amount` int NOT NULL,
-  `description` varchar(250) NOT NULL,
-  `dimension` varchar(100) NOT NULL,
-  `weight` decimal(5,3) NOT NULL,
+  `art_id` int NOT NULL AUTO_INCREMENT,
+  `art_name` varchar(255) DEFAULT NULL,
+  `art_photo` varbinary(255) DEFAULT NULL,
+  `amount` float NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `dimension` varchar(255) DEFAULT NULL,
+  `weight` float NOT NULL,
+  `artist_id` int NOT NULL,
   `sub_cat_id` int NOT NULL,
-  `u_id` int NOT NULL,
+  `sc_id` int DEFAULT NULL,
   PRIMARY KEY (`art_id`),
-  KEY `artist_id_fk_idx` (`u_id`),
+  KEY `uid_fk_idx` (`artist_id`),
   KEY `sub_cat_id_fk_idx` (`sub_cat_id`),
-  CONSTRAINT `sub_cat_id_fk` FOREIGN KEY (`sub_cat_id`) REFERENCES `art_sub_category` (`sc_id`),
-  CONSTRAINT `u_id_fk` FOREIGN KEY (`u_id`) REFERENCES `artist` (`id`)
+  KEY `FKhebtj28dxqpb0us1ny0guixc0` (`sc_id`),
+  CONSTRAINT `artist_id_fk` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`),
+  CONSTRAINT `FKhebtj28dxqpb0us1ny0guixc0` FOREIGN KEY (`sc_id`) REFERENCES `art_sub_category` (`sc_id`),
+  CONSTRAINT `sub_cat_id_fk` FOREIGN KEY (`sub_cat_id`) REFERENCES `art_sub_category` (`sc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -192,11 +199,11 @@ DROP TABLE IF EXISTS `brand`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `brand` (
-  `b_id` int NOT NULL,
-  `b_name` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `b_id` int NOT NULL AUTO_INCREMENT,
+  `b_name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`b_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,6 +212,7 @@ CREATE TABLE `brand` (
 
 LOCK TABLES `brand` WRITE;
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
+INSERT INTO `brand` VALUES (1,'Camel','AAAAAAAAAAAAAAA'),(2,'Faber-Castell','FFFFFFFFFFF'),(3,'LANA','LLLLLLLLLLLLLLL'),(4,'xx','YYYYYYYY'),(5,'pixel','ddddddddddddd'),(6,'aaa','aaaaa dfdf'),(7,'bbb','bbb dfdf');
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,7 +225,7 @@ DROP TABLE IF EXISTS `city`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `city` (
   `city_id` int NOT NULL AUTO_INCREMENT,
-  `city_name` varchar(50) NOT NULL,
+  `city_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`city_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -240,22 +248,22 @@ DROP TABLE IF EXISTS `order_details`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_details` (
-  `od_id` int NOT NULL,
+  `od_id` int NOT NULL AUTO_INCREMENT,
+  `qty` int DEFAULT NULL,
+  `shipping_address` varchar(255) DEFAULT NULL,
   `aor_id` int NOT NULL,
   `por_id` int NOT NULL,
-  `qty` int DEFAULT NULL,
-  `shipping_address` varchar(200) NOT NULL,
   `p_id` int NOT NULL,
   `art_id` int NOT NULL,
   PRIMARY KEY (`od_id`),
-  KEY `por_id_fk_idx` (`por_id`),
   KEY `aor_id_fk_idx` (`aor_id`),
-  KEY `pid_fk_idx` (`p_id`),
   KEY `art_id_fk_idx` (`art_id`),
+  KEY `pid_fk_idx` (`p_id`),
+  KEY `por_id_idx` (`por_id`),
   CONSTRAINT `aor_id_fk` FOREIGN KEY (`aor_id`) REFERENCES `art_order` (`aor_id`),
   CONSTRAINT `art_id_fk` FOREIGN KEY (`art_id`) REFERENCES `artwork` (`art_id`),
   CONSTRAINT `pid_fk` FOREIGN KEY (`p_id`) REFERENCES `product` (`p_id`),
-  CONSTRAINT `por_id_fk` FOREIGN KEY (`por_id`) REFERENCES `product_order` (`por_id`)
+  CONSTRAINT `por_id` FOREIGN KEY (`por_id`) REFERENCES `product_order` (`por_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -276,12 +284,12 @@ DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product` (
-  `p_id` int NOT NULL,
-  `p_name` varchar(100) NOT NULL,
-  `price` int NOT NULL,
-  `description` varchar(100) NOT NULL,
+  `p_id` int NOT NULL AUTO_INCREMENT,
+  `p_name` varchar(255) NOT NULL,
+  `price` float NOT NULL,
+  `description` varchar(255) NOT NULL,
   `stock_quantity` int NOT NULL,
-  `product_img` blob NOT NULL,
+  `product_img` varbinary(255) NOT NULL,
   `b_id` int NOT NULL,
   `psub_id` int NOT NULL,
   PRIMARY KEY (`p_id`),
@@ -309,11 +317,11 @@ DROP TABLE IF EXISTS `product_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product_category` (
-  `pcat_id` int NOT NULL,
-  `pcat_name` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `pcat_id` int NOT NULL AUTO_INCREMENT,
+  `pcat_name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`pcat_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -322,6 +330,7 @@ CREATE TABLE `product_category` (
 
 LOCK TABLES `product_category` WRITE;
 /*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
+INSERT INTO `product_category` VALUES (1,'colour','there are different types of colours'),(2,'Brush','There are different types of brush'),(3,'Sketpain','There are different types of sketpain'),(4,'canvas','There are different size of canvas '),(5,'Pen','');
 /*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -333,12 +342,12 @@ DROP TABLE IF EXISTS `product_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product_order` (
-  `por_id` int NOT NULL,
+  `por_id` int NOT NULL AUTO_INCREMENT,
   `por_date` date NOT NULL,
   `user_id` int NOT NULL,
-  `amount` int NOT NULL,
-  `order_status` varchar(45) NOT NULL,
-  `payment_status` varchar(45) NOT NULL,
+  `amount` float NOT NULL,
+  `order_status` int NOT NULL,
+  `payment_status` int NOT NULL,
   PRIMARY KEY (`por_id`),
   KEY `user_id_fk_idx` (`user_id`),
   CONSTRAINT `p_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -362,14 +371,14 @@ DROP TABLE IF EXISTS `psub_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `psub_category` (
-  `psub_id` int NOT NULL,
-  `psub_name` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `psub_id` int NOT NULL AUTO_INCREMENT,
+  `psub_name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `pcat_id` int NOT NULL,
   PRIMARY KEY (`psub_id`),
   KEY `pcat_id_fk_idx` (`pcat_id`),
   CONSTRAINT `pcat_id_fk` FOREIGN KEY (`pcat_id`) REFERENCES `product_category` (`pcat_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,6 +387,7 @@ CREATE TABLE `psub_category` (
 
 LOCK TABLES `psub_category` WRITE;
 /*!40000 ALTER TABLE `psub_category` DISABLE KEYS */;
+INSERT INTO `psub_category` VALUES (1,'Water Colour','These coloue is very good colour',1),(2,'Oil Colour','These Colour is very nice colour',1),(3,'Wax Colour','These colour is very nice colour',1),(4,'Flat Brush','These brush is very frequently used',2),(5,'Round Brush','Thses brush is frequently used',2),(6,'Angled Brush','These brush used rearly used',2),(7,'Brush Tip sketchpain','THis is very nice sketchpain',3),(8,'Fiber Tip sketchpain','this is very nice ',3),(9,'Round Shap Nib sketchpain','This is very commonly used',3),(10,'Small canvas','This is small canvas',4),(11,'Medium canvas','This is Medium canvas',4),(12,'Large canvas','This is large canvas',4);
 /*!40000 ALTER TABLE `psub_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,7 +400,7 @@ DROP TABLE IF EXISTS `role`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `role` (
   `role_id` int NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(50) NOT NULL,
+  `role_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -414,23 +424,23 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(45) NOT NULL,
-  `last_name` varchar(45) DEFAULT NULL,
-  `email_id` varchar(45) NOT NULL,
-  `contact` varchar(20) NOT NULL,
-  `profile_photo` blob,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `email_id` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `profile_photo` varbinary(255) DEFAULT NULL,
   `area_id` int NOT NULL,
-  `username` varchar(45) NOT NULL,
-  `password` varchar(150) NOT NULL,
-  `status` tinyint NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `status` bit(1) DEFAULT NULL,
   `role_id` int NOT NULL,
-  `address` varchar(200) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `area_id_idx` (`area_id`),
   KEY `role_id_fk_idx` (`role_id`),
   CONSTRAINT `area_id_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`),
   CONSTRAINT `role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -439,7 +449,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (7,'Artist','Role','artist@gmail.com','2233',NULL,1,'artist','$2a$11$VSVys1jhcsWvTvHwTI4T4.HoooBwzbRI8GJQbsugIGxuWsx2z8GLS',0,2,'hjgh'),(8,'Buyer','Role','buyer@gmail.com','2233',NULL,2,'buyer','$2a$11$ztzXySYYi4v.57/NidyAmOAiYOXV7wz3qmhzLEQAatEmEocgO8hDG',0,3,'hjgh'),(9,'Admin','Role','admin@gmail.com','2233',NULL,2,'admin','$2a$11$ReWm5gTk1dFQKNTKjjnenuBECpEIhqmGsMkIo.5USEhUs4CxvUjna',0,1,'hjgh'),(10,'Dhanashree','Sonawane','dhanshree@123','9373315055',NULL,1,'dhanu','$2a$11$VkBCsdt86J6cZCNsTnTBOugxAUCZq1xRrhW7GpAA4W.E4hyG.9uz.',0,2,'fdmgj'),(11,'Bakul','Joshi','bakul@gmail.com','888888888',NULL,1,'bakul.joshi','$2a$11$ywWp7BEYe8IdiVwcfxooZejIpGpDmbjvCJxsMXRUbGm93BHH6o/w2',1,2,'xxxxxxxxxx'),(12,'Prasad','Deshmukh','prasad@gmail.com','9999999999',NULL,1,'prasad.d','$2a$11$deD9vfnb7i6apWREyeTz9OE1bnAOTe6uahpNicWoBOh.OaGRStIw6',0,2,'xxxxxxxxxxxxxxxxx'),(13,'Prasad1','Deshmukh1','prasad@gmail.com1','9999999999',NULL,1,'prasad.d1','$2a$11$cOO2ZQ4ctMajpdhGJ.kJbeAqjkIx5YpQgMEB/x0O1ntVsLQBBf/N.',0,2,'uuuuuuuuuuuuuu'),(14,'mansi','patil','manasi@gmail.com','1234567891',NULL,1,'mansi','$2a$11$Eqa8bHVd/JihUwvaQGVvn.kFFZeGWdPcydjKFs91UJfwqEb00yTya',0,2,'aaaaaaaaaaaaaaaaaa'),(15,'mansi1','patil1','manasi@gmail.com','1234567891',NULL,1,'mansia','$2a$11$i.2cxcD6sQxssD6tU18j0.1SxJnLAILvkwkqGicY5oB6j3rToPCOu',0,3,'aaaaaaaaaaaaaaaaaa'),(16,'moin','rogatiya','moin@gmail.com','4323125456',NULL,1,'moin','$2a$11$eI0uXxaWDzmVZanxnl8FOuNVCvsP610OXbo/vIYP/oWujrZzgO1Ki',0,2,'mmmmmmmmmmmmmmmmm');
+INSERT INTO `users` VALUES (7,'Artist','Role','artist@gmail.com','2233',NULL,1,'artist','$2a$11$VSVys1jhcsWvTvHwTI4T4.HoooBwzbRI8GJQbsugIGxuWsx2z8GLS',_binary '\0',2,'hjgh'),(8,'Buyer','Role','buyer@gmail.com','2233',NULL,2,'buyer','$2a$11$ztzXySYYi4v.57/NidyAmOAiYOXV7wz3qmhzLEQAatEmEocgO8hDG',_binary '\0',3,'hjgh'),(9,'Admin','Role','admin@gmail.com','2233',NULL,2,'admin','$2a$11$ReWm5gTk1dFQKNTKjjnenuBECpEIhqmGsMkIo.5USEhUs4CxvUjna',_binary '\0',1,'hjgh'),(10,'Dhanashree','Sonawane','dhanshree@123','9373315055',NULL,1,'dhanu','$2a$11$VkBCsdt86J6cZCNsTnTBOugxAUCZq1xRrhW7GpAA4W.E4hyG.9uz.',_binary '\0',2,'fdmgj'),(11,'Bakul','Joshi','bakul@gmail.com','888888888',NULL,1,'bakul.joshi','$2a$11$ywWp7BEYe8IdiVwcfxooZejIpGpDmbjvCJxsMXRUbGm93BHH6o/w2',_binary '',2,'xxxxxxxxxx'),(12,'Prasad','Deshmukh','prasad@gmail.com','9999999999',NULL,1,'prasad.d','$2a$11$deD9vfnb7i6apWREyeTz9OE1bnAOTe6uahpNicWoBOh.OaGRStIw6',_binary '\0',2,'xxxxxxxxxxxxxxxxx'),(13,'Prasad1','Deshmukh1','prasad@gmail.com1','9999999999',NULL,1,'prasad.d1','$2a$11$cOO2ZQ4ctMajpdhGJ.kJbeAqjkIx5YpQgMEB/x0O1ntVsLQBBf/N.',_binary '\0',2,'uuuuuuuuuuuuuu'),(14,'mansi','patil','manasi@gmail.com','1234567891',NULL,1,'mansi','$2a$11$Eqa8bHVd/JihUwvaQGVvn.kFFZeGWdPcydjKFs91UJfwqEb00yTya',_binary '\0',2,'aaaaaaaaaaaaaaaaaa'),(15,'mansi1','patil1','manasi@gmail.com','1234567891',NULL,1,'mansia','$2a$11$i.2cxcD6sQxssD6tU18j0.1SxJnLAILvkwkqGicY5oB6j3rToPCOu',_binary '\0',3,'aaaaaaaaaaaaaaaaaa'),(16,'moin','rogatiya','moin@gmail.com','4323125456',NULL,1,'moin','$2a$11$eI0uXxaWDzmVZanxnl8FOuNVCvsP610OXbo/vIYP/oWujrZzgO1Ki',_binary '\0',2,'mmmmmmmmmmmmmmmmm'),(17,'jayashree','kalaskar','jayu@gmail.com','9898989898',NULL,1,'jayu','$2a$11$9x0ObUcItdbcOdb35hjS/uRNetx8y.qb9SzQhX9ePLNFakr7O5Cv.',_binary '\0',2,'zzzzzzzzzzz'),(18,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$AGNfuqLfYi6.rODrY/HtWOpaAlQg7PSzGMzaO5qr6IRkbI2Vp2aUa',NULL,2,'assd'),(19,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$dP4nWbdcWrBPY/Xe/gUcDuT5xB1toWy6lqHd7N1vWCkZtn9BHiVMW',NULL,2,'assd'),(20,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$f6BdKPsk1wYEGmQbc4ZmN.oacVCuujOR2u02EOAu6.CKdVWjZRNei',NULL,2,'assd'),(21,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$iReHzDUF7KhhOSEPuef/q.Y0CfKydBwyP.4byCEbG9n5.QBbKMbIi',NULL,2,'assd'),(22,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$yUoGZAfo.kFamOwrUoZ0Wez8CcIUX6y3N5TnzK9RJMQZxOTWR3bKO',NULL,2,'assd'),(23,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$LzTO9U.72wlyIjZXJ7bBXeT7uz9dON0Q70o694MfAjm53sUIt1Ogu',NULL,2,'assd'),(24,'abcd','aaaa','abcd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$adHVhL6xADCOac4.kbkR7.KhcBkV5Op.086i/yrsiCG7SJqew99C6',NULL,2,'assd'),(25,'abcd','aa','abd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$cniseSrsdZghfKWxj80YLe2bfhVOxCaYP11nDW/TJYG4CySkotm5u',NULL,2,'asd'),(26,'abcd','aa','abd@gmail.com','2323232323',NULL,1,'abcd','$2a$11$U/bPy3Je7DE2inE2yImmLOdmFoRYh9rG9zDrZp4c85zVA7XkdvOXe',NULL,2,'sd');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -452,4 +462,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-08 12:03:18
+-- Dump completed on 2024-08-19  8:45:54
